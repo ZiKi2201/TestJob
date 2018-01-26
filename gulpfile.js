@@ -1,55 +1,42 @@
-var gulp = require('gulp');
-var less = require('gulp-less'),
-	rename = require("gulp-rename"),
-	plumber = require('gulp-plumber'),
-	connect = require('gulp-connect');
-
+var gulp = require('gulp'),
+    less = require('gulp-less'),
+    connect = require('gulp-connect'),
+    plumber = require('gulp-plumber'),    
+    concat = require('gulp-concat');
 
 gulp.task('connect', function() {
-	connect.server({
-		port: 8888,
-		root: 'dev/',
-		livereload: true
-	});
+    connect.server({
+        port: 8888,
+        root: './prod/',
+        livereload: true
+    });
 });
 
-gulp.task('compile_less', function () {
-	return gulp.src('dev/less/*.less')
-		.pipe(plumber())
-		.pipe(less())
-		.pipe(rename({
-			dirname: "",
-			basename: "build",
-			extname: ".css"
-		}))
-		.pipe(gulp.dest('public/css/'))
-		.pipe(connect.reload());
+gulp.task('less', function(){
+   return gulp.src('./src/less/**/*.less')
+    .pipe(plumber())
+    .pipe(less())
+    .pipe(gulp.dest('./prod/css'))
+        .pipe(connect.reload());
 });
 
-gulp.task('move_js', [], function() {
-	return gulp.src('dev/js/*.js')
-		.pipe(gulp.dest('public/js/'))
-		.pipe(connect.reload());
-}); 
-
-gulp.task('move_json', [], function() {
-	return gulp.src('./src/*.json')
-		.pipe(gulp.dest('./public/'))
-		.pipe(connect.reload());
+gulp.task('scripts', function(){
+    return gulp.src('./src/js/**/*.js')
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('./prod/js'))
+        .pipe(connect.reload());
 });
 
-gulp.task('html', function() {
-	return gulp.src('dev/*.html')
-	.pipe(gulp.dest('public/'))
-})
-
-
-gulp.task('watch', function() {
-	gulp.watch('dev/less/**/*.less', ['compile_less'])
-	gulp.watch('dev/js/**/*.js', ['move_js'])
-	gulp.watch('dev/js/**/*.json', ['move_json'])
-	gulp.watch('dev/*.html', ['html'])
+gulp.task('html', function(){
+    return gulp.src('./src/**/*.html')
+    .pipe(gulp.dest('./prod'))
+        .pipe(connect.reload());
 });
 
+gulp.task('watch', function(){
+    gulp.watch('./src/less/**/*.less', ['less'])
+    gulp.watch('./src/js/**/*.js', ['scripts'])
+    gulp.watch('./src/**/*.html', ['html'])    
+});
 
-gulp.task('default', ['connect', 'move_json', 'compile_less', 'move_js', 'html', 'watch']);
+gulp.task('default', ['connect', 'less', 'scripts', 'html', 'watch']);
