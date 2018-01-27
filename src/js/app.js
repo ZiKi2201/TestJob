@@ -1,6 +1,6 @@
 var app = angular.module('helloWorldApp', [
     'ngRoute',
-    'ngMaterial'
+    'ngMaterial',
 ])
 
 app.config([
