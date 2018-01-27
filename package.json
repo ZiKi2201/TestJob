@@ -1,6 +1,6 @@
 {
-  "name": "projectnews",
-  "version": "1.0.0",
+  "name": "helloworld",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,13 +8,15 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "gulp": "^3.9.1"
+  },
   "devDependencies": {
-    "angular": "^1.6.8",
-    "bootstrap": "^4.0.0",
+    "browser-sync": "^2.18.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.2.0",
-    "gulp-less": "^3.4.0",
-    "gulp-plumber": "^1.2.0"
+    "gulp-less": "^3.4.0"
   }
 }
