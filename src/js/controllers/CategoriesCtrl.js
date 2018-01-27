@@ -1,5 +1,4 @@
-angular.module('helloWorldApp')
-.controller('HomeCtrl', [
+app.controller('CategoriesCtrl', [
     '$scope',
     function($scope) {
         console.log('Loaded.');

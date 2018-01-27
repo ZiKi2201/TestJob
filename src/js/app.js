@@ -1,13 +1,15 @@
-angular.module('helloWorldApp', [
-    'ngRoute'
+var app = angular.module('helloWorldApp', [
+    'ngRoute',
+    'ngMaterial'
 ])
-.config([
+
+app.config([
     '$routeProvider',
     function($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/home.html',
-                controller: 'HomeCtrl'
+                templateUrl: 'views/categories.html',
+                controller: 'CategoriesCtrl'
             });
     }
 ]);
