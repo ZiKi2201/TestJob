@@ -1,0 +1,17 @@
+
+<md-content class="news">
+  <md-list >
+    <md-subheader class="md-no-sticky listNews">{{report}}</md-subheader>
+    <md-list-item class="md-3-line" ng-repeat="new in news.list" ng-click="getDetails(new.id)">
+      <div class="md-list-item-text" layout="column">
+        <h3>{{ new.title }}</h3>
+        <p>{{ new.shortDescription }}</p>
+        <h4>{{ new.date | date:'yyyy-MM-dd HH:mm:ss Z'}}</h4>
+      </div>
+    </md-list-item>
+  </md-list>
+  <div ng-if="news.list[0]">
+    <md-button class="md-raised md-primary" ng-click="reloadPage(false)" ng-disabled="news.list.length<5">Назад</md-button>
+    <md-button class="md-raised md-primary" ng-click="reloadPage(true)" ng-disabled="news.list.length<5">Вперед</md-button>
+  </div>
+</md-content>

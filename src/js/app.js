@@ -5,11 +5,18 @@ var app = angular.module('helloWorldApp', [
 
 app.config([
     '$routeProvider',
-    function($routeProvider) {
+    '$locationProvider',
+    function($routeProvider, $locationProvider) {
         $routeProvider
-            .when('/', {
-                templateUrl: 'views/categories.html',
-                controller: 'CategoriesCtrl'
+
+            .when('/:id/news', {
+                templateUrl: 'views/news.html',
+                controller: 'NewsCtrl'
+            })
+            .when('/details/:id', {
+				templateUrl: 'views/detailsNews.html',
+				controller: 'DetailsCtrl'
             });
+
     }
 ]);

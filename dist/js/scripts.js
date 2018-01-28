@@ -76474,75 +76474,112 @@ var app = angular.module('helloWorldApp', [
 
 app.config([
     '$routeProvider',
-    function($routeProvider) {
+    '$locationProvider',
+    function($routeProvider, $locationProvider) {
         $routeProvider
-            .when('/', {
-                templateUrl: 'views/categories.html',
-                controller: 'CategoriesCtrl'
+
+            .when('/:id/news', {
+                templateUrl: 'views/news.html',
+                controller: 'NewsCtrl'
+            })
+            .when('/details/:id', {
+				templateUrl: 'views/detailsNews.html',
+				controller: 'DetailsCtrl'
             });
+
     }
 ]);
 
-app.controller('CategoriesCtrl', [
-    '$scope', '$http', '$mdDialog',
-    function($scope, $http, $mdDialog) {
+app.controller('DetailsCtrl', [
+    '$scope', '$http', '$routeParams', '$location', '$sce',
+    function($scope, $http, $routeParams, $location, $sce) {
+
+        $http({
+            method: 'GET',
+            url: 'http://testtask.sebbia.com/v1/news/details?id='+$routeParams.id+''
+        }).then(function successCallback(response) {
+            $scope.detailsNews = response.data.news;
+            $scope.fullDesc = $sce.trustAsHtml(response.data.news.fullDescription)
+        },function errorCallback(response) {
+
+        });
+        
+    }
+])
+app.controller('MainCtrl', [
+    '$scope', '$http', '$location',
+    function($scope, $http, $location) {
        
         $http({
   			method: 'GET',
   			url: 'http://testtask.sebbia.com/v1/news/categories'
 		}).then(function successCallback(response) {
-    		console.log(response)
     		$scope.categories = response.data;
 
   		}, function errorCallback(response) {
 
   		});
-
-  		showAdvanced = function(ev, res) {
-			$mdDialog.show({
-				controller: 'CategoriesCtrl',
-		    	templateUrl: 'models/dialog.html',
-		    	parent: angular.element(document.body),
-		    	targetEvent: ev,
-		    	clickOutsideToClose:true,
-		    	fullscreen: $scope.customFullscreen
-		    })
-		    .then(function(answer) {
-		    	$scope.status = 'You said the information was "' + answer + '".';
-		    }, function() {
-		    	$scope.status = 'You cancelled the dialog.';
-		    });
-		  };
-
-		$scope.clickCategory = function (category) {
-			console.log(category)
-			$http({
-				method: 'GET',
-  				url: 'http://testtask.sebbia.com/v1/news/categories/'+category.id+'/news'
-			}).then(function successCallback(response) {
-				console.log(response)
-				$scope.news = response.data
-
-			},function errorCallback(response) {
-
-  			});
+		$scope.getNews = function (category) {
+			$location.path( "/"+category+"/news/" );
 		}
+  		
+		
 
+		
+		
 
-		$scope.clickNew = function (currentNew, ev) {
-  			console.log(currentNew)
-  			$http({
-				method: 'GET',
-  				url: 'http://testtask.sebbia.com/v1/news/details?id='+currentNew.id+''
-			}).then(function successCallback(response) {
-				console.log(response)
-				
-				showAdvanced(ev, response.data.news)
-
-			},function errorCallback(response) {
-
-  			});
-  		}
 
     }
-]);
+])
+
+app.controller('NewsCtrl', [
+    '$scope', '$http', '$routeParams', '$location',
+    function($scope, $http, $routeParams, $location) {
+            var page = 0;
+			$http({
+				method: 'GET',
+  				url: 'http://testtask.sebbia.com/v1/news/categories/'+$routeParams.id+'/news'
+			}).then(function successCallback(response) {
+				if (response.data.list[0]) {
+                    $scope.news = response.data;
+                    $scope.report = 'Список новостей:'
+                } else {
+                    $scope.report = 'Новостей нет, но вы держитесь!'
+                }
+			    },function errorCallback(response) {
+
+            });
+
+            $scope.getDetails = function (detailsNews) {
+                
+                $location.path( "/details/"+detailsNews+'' );
+            }
+
+            $scope.reloadPage = function (orientation) {
+                thisPage = page
+                if (orientation) {
+                    page = page + 1;
+                } else {
+                    page = page - 1;
+                }
+                if (page < 0) {
+                    page = 0;
+                    return;
+                } 
+                $http({
+                    method: 'GET',
+                    url: 'http://testtask.sebbia.com/v1/news/categories/'+$routeParams.id+'/news?page='+page+''
+                }).then(function successCallback(response){
+                    if (response.data.list[0]) {
+                        $scope.news = response.data;
+                    } else {
+                        page = thisPage;
+                    }
+                },
+                function errorCallback(response) {
+        
+                });
+            }
+		
+    }
+])

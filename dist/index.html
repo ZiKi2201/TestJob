@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="helloWorldApp">
     <head>
-        <title>A Proper Angular App</title>
+        <title>Test job by Volokhovskiy</title>
         <link href="css/main.css" rel="stylesheet">
     </head>
-    <body>
+    <body ng-controller="MainCtrl">
+        <md-toolbar layout="row" class="md-hue-3">
+                <div class="md-toolbar-tools ">
+                    <md-button class="md-raised" ng-repeat="category in categories.list" ng-click="getNews(category.id)">{{ category.name }}</md-button>
+                </div>
+        </md-toolbar>
         <ng-view class="view"></ng-view>
     </body>
     <script src="js/scripts.js"></script>

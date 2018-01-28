@@ -8,15 +8,15 @@ const styles = require('./styles');
 
 var devMode = false;
 
-// gulp.task('less', function() {
-// 	gulp.src('./src/less/*.less')
-// 		.pipe(less())
-// 		.pipe(concat('styles.css'))
-// 		.pipe(gulp.dest('dist/css'))
-// 		.pipe(browserSync.reload({
-// 			stream: true
-// 		}));
-// });
+gulp.task('less', function() {
+	gulp.src(styles)
+		.pipe(less())
+		.pipe(concat('main.css'))
+		.pipe(gulp.dest('./dist/css'))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
+});
 
 gulp.task('css', function() {
     gulp.src(styles)
@@ -45,7 +45,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('build', function() {
-	gulp.start(['css', 'js', 'html'])
+	gulp.start(['less','css', 'js', 'html'])
 });
 
 gulp.task('browser-sync', function() {
@@ -60,6 +60,7 @@ gulp.task('browser-sync', function() {
 gulp.task('start', function() {
 	devMode = true;
 	gulp.start(['build', 'browser-sync']);
+	gulp.watch(['./src/less/**/*.less'], ['less']);
 	gulp.watch(['./src/css/**/*.css'], ['css']);
 	gulp.watch(['./src/js/**/*.js'], ['js']);
 	gulp.watch(['./src/templates/**/*.html'], ['html']);

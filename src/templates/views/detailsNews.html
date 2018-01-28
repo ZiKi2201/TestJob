@@ -1,0 +1,8 @@
+
+    <md-content class='fullDesc' flex layout-padding>
+        <h1>{{ detailsNews.title }}</h1>
+        <p>{{ detailsNews.shortDescription }}</p>
+        <p ng-bind-html='fullDesc'></p>
+        <h4>{{ detailsNews.date | date:'yyyy-MM-dd HH:mm:ss Z' }}</h4> 
+    </md-content>
+
